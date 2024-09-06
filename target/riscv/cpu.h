@@ -202,6 +202,21 @@ struct CPUArchState {
     target_ulong vtype;
     bool vill;
 
+    /* CX CSRs */
+    target_ulong mcx_enable0;
+    target_ulong mcx_enable1;
+    target_ulong mcx_enable2;
+    target_ulong mcx_enable3;
+    target_ulong mcx_enable4;
+    target_ulong mcx_enable5;
+    target_ulong mcx_enable6;
+    target_ulong mcx_enable7;
+
+    target_ulong cx_status;
+    target_ulong cx_index;
+    /* End CX CSRs */
+
+
     target_ulong pc;
     target_ulong load_res;
     target_ulong load_val;

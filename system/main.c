@@ -25,6 +25,7 @@
 #include "qemu/osdep.h"
 #include "qemu-main.h"
 #include "sysemu/sysemu.h"
+#include "../../zoo/exports.h"
 
 #ifdef CONFIG_SDL
 #include <SDL.h>
@@ -32,6 +33,9 @@
 
 int qemu_default_main(void)
 {
+    printf("initializing cx function pointers...\n");
+    cx_init_funcs();
+    
     int status;
 
     status = qemu_main_loop();

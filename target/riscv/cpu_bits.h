@@ -46,6 +46,20 @@
 #define CSR_UTVAL           0x043
 #define CSR_UIP             0x044
 
+/* CX */
+#define CSR_CX_INDEX     0x011 // should be 800
+#define CSR_CX_STATUS    0x801 // should be 801
+#define CSR_MCX_ENABLE0  0x012
+#define CSR_MCX_ENABLE1  0x013
+#define CSR_MCX_ENABLE2  0x014
+#define CSR_MCX_ENABLE3  0x015
+#define CSR_MCX_ENABLE4  0x016
+#define CSR_MCX_ENABLE5  0x017
+#define CSR_MCX_ENABLE6  0x018
+#define CSR_MCX_ENABLE7  0x019
+
+
+
 /* User Floating-Point CSRs */
 #define CSR_FFLAGS          0x001
 #define CSR_FRM             0x002

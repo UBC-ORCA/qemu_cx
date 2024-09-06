@@ -4898,6 +4898,124 @@ static RISCVException write_jvt(CPURISCVState *env, int csrno,
     return RISCV_EXCP_NONE;
 }
 
+/* CX CSRs */
+static RISCVException read_cx_index(CPURISCVState *env, int csrno,
+                                target_ulong *val)
+{
+    *val = env->cx_index;
+    return RISCV_EXCP_NONE;
+}
+
+static RISCVException write_cx_index(CPURISCVState *env, int csrno,
+                                 target_ulong val)
+{
+    env->cx_index = val;
+    return RISCV_EXCP_NONE;
+}
+
+static RISCVException read_cx_status(CPURISCVState *env, int csrno,
+                                target_ulong *val)
+{
+    int prev_priv = env->priv;
+    if (prev_priv == PRV_S) {
+        riscv_cpu_set_mode(env, PRV_U, false);
+    }
+    *val = env->cx_status;
+    if (prev_priv == PRV_S) {
+        riscv_cpu_set_mode(env, PRV_S, false);
+    }
+    return RISCV_EXCP_NONE;
+}
+
+static RISCVException write_cx_status(CPURISCVState *env, int csrno,
+                                 target_ulong val)
+{
+    int prev_priv = env->priv;
+    if (prev_priv == PRV_S) {
+        riscv_cpu_set_mode(env, PRV_U, false);
+    }
+    env->cx_status = val;
+    if (prev_priv == PRV_S) {
+        riscv_cpu_set_mode(env, PRV_S, false);
+    }
+    return RISCV_EXCP_NONE;
+}
+
+static RISCVException read_mcx_enable(CPURISCVState *env, int csrno,
+                                  target_ulong *val)
+{
+    uint32_t reg_index = csrno - CSR_MCX_ENABLE0;
+
+    switch (reg_index) {
+    case 0:
+        *val = env->mcx_enable0;
+        break;
+    case 1:
+        *val = env->mcx_enable1;
+        break;
+    case 2:
+        *val = env->mcx_enable2;
+        break;
+    case 3:
+        *val = env->mcx_enable3;
+        break;
+    case 4:
+        *val = env->mcx_enable4;
+        break;
+    case 5:
+        *val = env->mcx_enable5;
+        break;
+    case 6:
+        *val = env->mcx_enable6;
+        break;
+    case 7:
+        *val = env->mcx_enable7;
+        break;
+    default:
+        qemu_log_mask(LOG_GUEST_ERROR, "mcx_enable CSR %d out of bounds\n", reg_index);
+    }
+    return RISCV_EXCP_NONE;
+}
+
+static RISCVException write_mcx_enable(CPURISCVState *env, int csrno,
+                                   target_ulong val)
+{
+    uint32_t reg_index = csrno - CSR_MCX_ENABLE0;
+
+    switch (reg_index) {
+    case 0:
+        env->mcx_enable0 = val;
+        break;
+    case 1:
+        env->mcx_enable1 = val;
+        break;
+    case 2:
+        env->mcx_enable2 = val;
+        break;
+    case 3:
+        env->mcx_enable3 = val;
+        break;
+    case 4:
+        env->mcx_enable4 = val;
+        break;
+    case 5:
+        env->mcx_enable5 = val;
+        break;
+    case 6:
+        env->mcx_enable6 = val;
+        break;
+    case 7:
+        env->mcx_enable7 = val;
+        break;
+    default:
+        qemu_log_mask(LOG_GUEST_ERROR, "mcx_enable CSR %d out of bounds\n", reg_index);
+    }
+    return RISCV_EXCP_NONE;
+}
+
+/* End CX */
+
+
 /*
  * Control and Status Register function table
  * riscv_csr_operations::predicate() must be provided for an implemented CSR
@@ -4933,6 +5051,19 @@ riscv_csr_operations csr_ops[CSR_TABLE_SIZE] = {
 
     /* Zcmt Extension */
     [CSR_JVT] = {"jvt", zcmt, read_jvt, write_jvt},
+
+    /* CX CSRs */
+    [CSR_CX_INDEX] = { "cx_index", any, read_cx_index, write_cx_index },
+    [CSR_CX_STATUS] =  { "cx_status", any, read_cx_status, write_cx_status },
+    [CSR_MCX_ENABLE0] = { "mcx_enable0", any, read_mcx_enable, write_mcx_enable },
+    [CSR_MCX_ENABLE1] = { "mcx_enable1", any, read_mcx_enable, write_mcx_enable },
+    [CSR_MCX_ENABLE2] = { "mcx_enable2", any, read_mcx_enable, write_mcx_enable },
+    [CSR_MCX_ENABLE3] = { "mcx_enable3", any, read_mcx_enable, write_mcx_enable },
+    [CSR_MCX_ENABLE4] = { "mcx_enable4", any, read_mcx_enable, write_mcx_enable },
+    [CSR_MCX_ENABLE5] = { "mcx_enable5", any, read_mcx_enable, write_mcx_enable },
+    [CSR_MCX_ENABLE6] = { "mcx_enable6", any, read_mcx_enable, write_mcx_enable },
+    [CSR_MCX_ENABLE7] = { "mcx_enable7", any, read_mcx_enable, write_mcx_enable },
+    /* End CX */
 
 #if !defined(CONFIG_USER_ONLY)
     /* Machine Timers and Counters */
