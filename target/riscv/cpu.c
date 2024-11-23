@@ -813,7 +813,7 @@ static void riscv_cpu_dump_state(CPUState *cs, FILE *f, int flags)
             CSR_MPMBASE,
             CSR_MPMMASK,
             /* CX */
-            CSR_CX_INDEX,
+            CSR_CX_SELECTOR_USER,
             CSR_CX_STATUS,
             CSR_MCX_ENABLE0,
             CSR_MCX_ENABLE1,

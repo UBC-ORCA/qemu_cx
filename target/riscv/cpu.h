@@ -213,7 +213,7 @@ struct CPUArchState {
     target_ulong mcx_enable7;
 
     target_ulong cx_status;
-    target_ulong cx_index;
+    target_ulong ucx_sel;
     /* End CX CSRs */
 
 

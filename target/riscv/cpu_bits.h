@@ -47,7 +47,7 @@
 #define CSR_UIP             0x044
 
 /* CX */
-#define CSR_CX_INDEX     0x011 // should be 800
+#define CSR_CX_SELECTOR_USER 0x011 // should be 800
 #define CSR_CX_STATUS    0x801 // should be 801
 #define CSR_MCX_ENABLE0  0x018
 #define CSR_MCX_ENABLE1  0x019

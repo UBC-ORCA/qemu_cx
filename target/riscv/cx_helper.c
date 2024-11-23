@@ -13,7 +13,7 @@ target_ulong HELPER(cx_reg)(CPURISCVState *env, target_ulong cf_id,
                              target_ulong rs1, target_ulong rs2)
 {
     // not sure if these are the right error values to set it to
-    // if (env->cx_index == CX_INVALID_SELECTOR) {
+    // if (env->ucx_sel == CX_INVALID_SELECTOR) {
     //     cx_status_t cx_status = {.idx = env->cx_status};
     //     cx_status.sel.IV = 1;
     //     cx_status.sel.IC = 1;
@@ -24,16 +24,16 @@ target_ulong HELPER(cx_reg)(CPURISCVState *env, target_ulong cf_id,
 
     /* Need to check the correct enable bit in the correct CSR */
 
-    if (env->cx_index == CX_LEGACY) {
+    if (env->ucx_sel == CX_LEGACY) {
         return -1;
     }
 
-    if (env->cx_index == CX_INVALID_SELECTOR) {
+    if (env->ucx_sel == CX_INVALID_SELECTOR) {
         return -1;
     }
 
-    int cxu_id = CX_GET_CXU_ID(env->cx_index);
-    int state_id = CX_GET_STATE_ID(env->cx_index);
+    int cxu_id = CX_GET_CXU_ID(env->ucx_sel);
+    int state_id = CX_GET_STATE_ID(env->ucx_sel);
 
     int mcx_enable_csr = cxu_id / 2;
     int mcx_enable = 0xFFFFFFFF;
@@ -65,8 +65,8 @@ target_ulong HELPER(cx_reg)(CPURISCVState *env, target_ulong cf_id,
     uint32_t OPCODE_ID = cf_id;
     int32_t OPA = rs1;
     int32_t OPB = rs2;
-    uint32_t CXU_ID = CX_GET_CXU_ID(env->cx_index);
-    uint32_t STATE_ID = CX_GET_STATE_ID(env->cx_index);
+    uint32_t CXU_ID = CX_GET_CXU_ID(env->ucx_sel);
+    uint32_t STATE_ID = CX_GET_STATE_ID(env->ucx_sel);
 
     // stateless 
     if (STATE_ID > 0 && num_states[CXU_ID] == 0) {

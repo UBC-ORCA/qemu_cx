@@ -4899,17 +4899,17 @@ static RISCVException write_jvt(CPURISCVState *env, int csrno,
 }
 
 /* CX CSRs */
-static RISCVException read_cx_index(CPURISCVState *env, int csrno,
+static RISCVException read_ucx_sel(CPURISCVState *env, int csrno,
                                 target_ulong *val)
 {
-    *val = env->cx_index;
+    *val = env->ucx_sel;
     return RISCV_EXCP_NONE;
 }
 
-static RISCVException write_cx_index(CPURISCVState *env, int csrno,
+static RISCVException write_ucx_sel(CPURISCVState *env, int csrno,
                                  target_ulong val)
 {
-    env->cx_index = val;
+    env->ucx_sel = val;
     return RISCV_EXCP_NONE;
 }
 
@@ -5053,7 +5053,7 @@ riscv_csr_operations csr_ops[CSR_TABLE_SIZE] = {
     [CSR_JVT] = {"jvt", zcmt, read_jvt, write_jvt},
 
     /* CX CSRs */
-    [CSR_CX_INDEX] = { "cx_index", any, read_cx_index, write_cx_index },
+    [CSR_CX_SELECTOR_USER] = { "ucx_sel", any, read_ucx_sel, write_ucx_sel },
     [CSR_CX_STATUS] =  { "cx_status", any, read_cx_status, write_cx_status },
     [CSR_MCX_ENABLE0] = { "mcx_enable0", any, read_mcx_enable, write_mcx_enable },
     [CSR_MCX_ENABLE1] = { "mcx_enable1", any, read_mcx_enable, write_mcx_enable },

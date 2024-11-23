@@ -121,7 +121,7 @@ static const VMStateDescription vmstate_hyper = {
         VMSTATE_UINTTL(env.satp_hs, RISCVCPU),
         VMSTATE_UINT64(env.mstatus_hs, RISCVCPU),
 
-        VMSTATE_UINTTL(env.cx_index, RISCVCPU),
+        VMSTATE_UINTTL(env.ucx_sel, RISCVCPU),
         VMSTATE_UINTTL(env.cx_status, RISCVCPU),
         VMSTATE_UINTTL(env.mcx_enable0, RISCVCPU),
         VMSTATE_UINTTL(env.mcx_enable1, RISCVCPU),
