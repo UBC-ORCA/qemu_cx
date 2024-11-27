@@ -30,6 +30,8 @@
 #include "qemu/guest-random.h"
 #include "qapi/error.h"
 
+#include "../../../include/utils.h"
+
 /* CSR function table public API */
 void riscv_get_csr_ops(int csrno, riscv_csr_operations *ops)
 {
@@ -4910,6 +4912,47 @@ static RISCVException write_ucx_sel(CPURISCVState *env, int csrno,
                                  target_ulong val)
 {
     env->ucx_sel = val;
+    // printf("priv: %d\n", env->ucx_sel);
+
+    if (val == 0 || val == CX_INVALID_SELECTOR) {
+        env->ucx_sel = val;
+        return RISCV_EXCP_NONE;
+    }
+
+    if (env->priv == PRV_S) {
+        env->ucx_sel = val;
+        return RISCV_EXCP_NONE;
+    }
+
+    int state_id = CX_GET_STATE_ID(val);
+    int cxu_id = CX_GET_CXU_ID(val);
+
+    int scx_enable_csr = cxu_id / 2;
+    int scx_enable_idx = state_id + (cxu_id % 2) * MAX_NUM_STATES;
+
+    uint32_t scx_enable = 0;
+    switch (scx_enable_csr) {
+        case 0:
+            scx_enable = env->mcx_enable0;
+            break;
+        case 1:
+            scx_enable = env->mcx_enable1;
+            break;
+        case 2:
+            scx_enable = env->mcx_enable2;
+            break;
+        case 3: 
+            scx_enable = env->mcx_enable3;
+            break;
+        default:
+            printf("Further CSRs not defined (4-7); I should do that eventually\n");
+            break;
+    }
+
+    if (!(scx_enable & (1 << scx_enable_idx))) {
+        return RISCV_EXCP_ILLEGAL_INST;
+    }
+
     return RISCV_EXCP_NONE;
 }
 

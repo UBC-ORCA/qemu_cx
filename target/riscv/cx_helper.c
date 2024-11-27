@@ -2,6 +2,7 @@
 #include "qemu/osdep.h"
 #include "exec/exec-all.h"
 #include "exec/helper-proto.h"
+#include "cpu_bits.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -57,8 +58,9 @@ target_ulong HELPER(cx_reg)(CPURISCVState *env, target_ulong cf_id,
     }
 
     int32_t enable = GET_BITS(mcx_enable, (state_id + (cxu_id % 2) * (MAX_NUM_CXUS)), 1);
-
-    if (enable == 1) {
+    
+    // No exceptions in S mode
+    if (enable == 0 && env->priv == PRV_U) {
         riscv_raise_exception(env, RISCV_EXCP_ILLEGAL_INST, GETPC());
     }
 
