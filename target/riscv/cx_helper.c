@@ -29,7 +29,7 @@ target_ulong HELPER(cx_reg)(CPURISCVState *env, target_ulong cf_id,
         return -1;
     }
 
-    if (env->ucx_sel == CX_INVALID_SELECTOR) {
+    if (GET_BITS(env->ucx_sel, 31, 1) == 1) {
         return -1;
     }
 
@@ -71,7 +71,7 @@ target_ulong HELPER(cx_reg)(CPURISCVState *env, target_ulong cf_id,
     uint32_t STATE_ID = CX_GET_STATE_ID(env->ucx_sel);
 
     // stateless 
-    if (STATE_ID > 0 && num_states[CXU_ID] == 0) {
+    if (num_states[CXU_ID] == 0 && STATE_ID > 0) {
         cx_status_t cx_status = {.idx = env->cx_status};
         cx_status.sel.IS = 1;
         env->cx_status = cx_status.idx;
