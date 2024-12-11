@@ -812,6 +812,11 @@ static void riscv_cpu_dump_state(CPUState *cs, FILE *f, int flags)
             CSR_SPMMASK,
             CSR_MPMBASE,
             CSR_MPMMASK,
+            /* CX */
+            CSR_MCX_SELECTOR,
+            CSR_CX_INDEX,
+            CSR_MCX_TABLE,
+            CSR_CX_STATUS
         };
 
         for (i = 0; i < ARRAY_SIZE(dump_csrs); ++i) {
