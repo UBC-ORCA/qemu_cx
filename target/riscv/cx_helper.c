@@ -26,10 +26,12 @@ target_ulong HELPER(cx_reg)(CPURISCVState *env, target_ulong cf_id,
     /* Need to check the correct enable bit in the correct CSR */
 
     if (env->ucx_sel == CX_LEGACY) {
+        printf("QEMU Error - Legacy set.\n");
         return -1;
     }
 
     if (GET_BITS(env->ucx_sel, 31, 1) == 1) {
+        printf("QEMU Error - Invalid bit set in Selector.\n");
         return -1;
     }
 
@@ -54,11 +56,17 @@ target_ulong HELPER(cx_reg)(CPURISCVState *env, target_ulong cf_id,
             break;
         default:
             printf("Further CSRs not defined (4-7); I should do that eventually\n");
+            riscv_raise_exception(env, RISCV_EXCP_ILLEGAL_INST, GETPC());
             break;
     }
 
+    if (mcx_enable == 0xFFFFFFFF) {
+        printf("illegal instruction\n");
+        riscv_raise_exception(env, RISCV_EXCP_ILLEGAL_INST, GETPC());
+    }
+
     int32_t enable = GET_BITS(mcx_enable, (state_id + (cxu_id % 2) * (MAX_NUM_CXUS)), 1);
-    
+    // printf("sel: %08x, en: %d\n", mcx_enable, enable);
     // No exceptions in S mode
     if (enable == 0 && env->priv == PRV_U) {
         riscv_raise_exception(env, RISCV_EXCP_ILLEGAL_INST, GETPC());
@@ -90,7 +98,33 @@ target_ulong HELPER(cx_reg)(CPURISCVState *env, target_ulong cf_id,
     }
     
     assert( CXU_ID < NUM_CXUS ); // Possibly redundant
-    int32_t out = cx_funcs[CXU_ID][OPCODE_ID](OPA, OPB, STATE_ID);
+
+    cx_idx_t sys_sel = {.idx = env->ucx_sel};
+    int32_t out = cx_funcs[CXU_ID][OPCODE_ID](OPA, OPB, sys_sel);
+
+    if (env->priv == PRV_S) {
+        return (target_ulong)out;
+    }
+
+    mcx_enable &= ~(1 << (state_id + (cxu_id % 2) * (MAX_NUM_CXUS)));
+
+    switch (mcx_enable_csr) {
+    case 0:
+        env->mcx_enable0 = mcx_enable;
+        break;
+    case 1:
+        env->mcx_enable1 = mcx_enable;
+        break;
+    case 2:
+        env->mcx_enable2 = mcx_enable;
+        break;
+    case 3:
+        env->mcx_enable3 = mcx_enable;
+        break;
+    default:
+        printf("Further CSRs not defined (4-7); I should do that eventually\n");
+        break;
+    }
 
     return (target_ulong)out;
-} 
+}
