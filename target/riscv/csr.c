@@ -4901,6 +4901,20 @@ static RISCVException write_jvt(CPURISCVState *env, int csrno,
 }
 
 /* CX CSRs */
+static RISCVException read_ucx_prev_sel(CPURISCVState *env, int csrno,
+                                target_ulong *val)
+{
+    *val = env->ucx_prev_sel;
+    return RISCV_EXCP_NONE;
+}
+
+static RISCVException write_ucx_prev_sel(CPURISCVState *env, int csrno,
+                                target_ulong val)
+{
+    env->ucx_prev_sel = val;
+    return RISCV_EXCP_NONE;
+}
+
 static RISCVException read_ucx_sel(CPURISCVState *env, int csrno,
                                 target_ulong *val)
 {
@@ -4952,6 +4966,8 @@ static RISCVException write_ucx_sel(CPURISCVState *env, int csrno,
     if (!(scx_enable & (1 << scx_enable_idx))) {
         return RISCV_EXCP_ILLEGAL_INST;
     }
+
+
 
     return RISCV_EXCP_NONE;
 }
@@ -5097,6 +5113,7 @@ riscv_csr_operations csr_ops[CSR_TABLE_SIZE] = {
 
     /* CX CSRs */
     [CSR_CX_SELECTOR_USER] = { "ucx_sel", any, read_ucx_sel, write_ucx_sel },
+    [CSR_CX_PREV_SELECTOR_USER] = { "ucx_prev_sel", any, read_ucx_prev_sel, write_ucx_prev_sel },
     [CSR_CX_STATUS] =  { "cx_status", any, read_cx_status, write_cx_status },
     [CSR_MCX_ENABLE0] = { "mcx_enable0", any, read_mcx_enable, write_mcx_enable },
     [CSR_MCX_ENABLE1] = { "mcx_enable1", any, read_mcx_enable, write_mcx_enable },

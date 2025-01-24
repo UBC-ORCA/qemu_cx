@@ -214,6 +214,7 @@ struct CPUArchState {
 
     target_ulong cx_status;
     target_ulong ucx_sel;
+    target_ulong ucx_prev_sel;
     /* End CX CSRs */
 
 

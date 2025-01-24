@@ -48,6 +48,7 @@
 
 /* CX */
 #define CSR_CX_SELECTOR_USER 0x011 // should be 800
+#define CSR_CX_PREV_SELECTOR_USER 0x012
 #define CSR_CX_STATUS    0x801 // should be 801
 #define CSR_MCX_ENABLE0  0x018
 #define CSR_MCX_ENABLE1  0x019
@@ -57,8 +58,6 @@
 #define CSR_MCX_ENABLE5  0x01D
 #define CSR_MCX_ENABLE6  0x01E
 #define CSR_MCX_ENABLE7  0x01F
-
-
 
 /* User Floating-Point CSRs */
 #define CSR_FFLAGS          0x001
