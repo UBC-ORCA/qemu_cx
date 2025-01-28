@@ -54,8 +54,20 @@ target_ulong HELPER(cx_reg)(CPURISCVState *env, target_ulong cf_id,
         case 3:
             mcx_enable = env->mcx_enable3;
             break;
+        case 4:
+            mcx_enable = env->mcx_enable4;
+            break;
+        case 5:
+            mcx_enable = env->mcx_enable5;
+            break;
+        case 6:
+            mcx_enable = env->mcx_enable6;
+            break;
+        case 7:
+            mcx_enable = env->mcx_enable7;
+            break;
         default:
-            printf("Further CSRs not defined (4-7); I should do that eventually\n");
+            printf("Enable CSR (%d) not defined. Max CSR: 16\n", mcx_enable_csr);
             riscv_raise_exception(env, RISCV_EXCP_ILLEGAL_INST, GETPC());
             break;
     }
