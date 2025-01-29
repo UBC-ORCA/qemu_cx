@@ -4955,8 +4955,20 @@ static RISCVException write_ucx_sel(CPURISCVState *env, int csrno,
         case 2:
             scx_enable = env->mcx_enable2;
             break;
-        case 3: 
+        case 3:
             scx_enable = env->mcx_enable3;
+            break;
+        case 4:
+            scx_enable = env->mcx_enable4;
+            break;
+        case 5:
+            scx_enable = env->mcx_enable5;
+            break;
+        case 6:
+            scx_enable = env->mcx_enable6;
+            break;
+        case 7:
+            scx_enable = env->mcx_enable7;
             break;
         default:
             printf("Further CSRs not defined (4-7); I should do that eventually\n");
@@ -4966,8 +4978,6 @@ static RISCVException write_ucx_sel(CPURISCVState *env, int csrno,
     if (!(scx_enable & (1 << scx_enable_idx))) {
         return RISCV_EXCP_ILLEGAL_INST;
     }
-
-
 
     return RISCV_EXCP_NONE;
 }
